@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Profile Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <div class="avatar-placeholder mb-3">
+                            {{ current_user.username[0].upper() }}
+                        </div>
+                        <h4>{{ current_user.username }}</h4>
+                        <p class="text-muted">{{ current_user.email }}</p>
+                    </div>
+                    <div class="profile-stats">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="stat-item text-center">
+                                    <h3>{{ predictions_count }}</h3>
+                                    <p class="text-muted mb-0">Predictions</p>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="stat-item text-center">
+                                    <h3>{{ current_user.created_at.strftime('%b %Y') }}</h3>
+                                    <p class="text-muted mb-0">Member Since</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Account Settings</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('update_profile') }}">
+                        <div class="form-group mb-3">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" value="{{ current_user.username }}" disabled>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ current_user.email }}">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="new_password">New Password</label>
+                            <input type="password" class="form-control" id="new_password" name="new_password">
+                            <small class="text-muted">Leave blank to keep current password</small>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="confirm_password">Confirm New Password</label>
+                            <input type="password" class="form-control" id="confirm_password" name="confirm_password">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Data Management</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-1">Export Predictions</h6>
+                            <p class="text-muted mb-0">Download all your prediction data</p>
+                        </div>
+                        <a href="{{ url_for('export_predictions') }}" class="btn btn-outline-primary">Export CSV</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.avatar-placeholder {
+    width: 100px;
+    height: 100px;
+    background-color: #007bff;
+    color: white;
+    font-size: 40px;
+    line-height: 100px;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
+.stat-item {
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.profile-stats {
+    margin-top: 20px;
+}
+
+.profile-stats h3 {
+    color: #007bff;
+    margin-bottom: 5px;
+}
+</style>
+{% endblock %} 

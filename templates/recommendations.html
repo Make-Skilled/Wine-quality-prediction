@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+
+{% block title %}Wine Recommendations{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2><i class="fas fa-wine-bottle me-2"></i>Wine Recommendations</h2>
+            <p class="text-muted">Personalized suggestions based on your predictions</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
+                <i class="fas fa-chart-line me-2"></i>Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-star me-2"></i>Quality Status
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <div class="quality-circle mb-3 {{ 'high-quality' if recommendations.recent_quality >= 6 else 'low-quality' }}">
+                            {{ "%.1f"|format(recommendations.recent_quality) }}
+                        </div>
+                        <h4>{{ "High" if recommendations.recent_quality >= 6 else "Needs Improvement" }}</h4>
+                        <p class="text-muted">Latest Quality Score</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-lightbulb me-2"></i>Quick Tips
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="tips-list">
+                        {% for tip in recommendations.tips %}
+                        <li class="tip-item animate__animated animate__fadeIn" style="animation-delay: {{ loop.index * 0.2 }}s">
+                            {{ tip }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            {% if recommendations.ideal_characteristics %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-flask me-2"></i>Ideal Characteristics
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="characteristic-item">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6>Alcohol Content</h6>
+                                    <span class="characteristic-value">{{ "%.1f"|format(recommendations.ideal_characteristics.alcohol) }}%</span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" 
+                                         style="width: {{ (recommendations.ideal_characteristics.alcohol/15)*100 }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="characteristic-item">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6>pH Level</h6>
+                                    <span class="characteristic-value">{{ "%.2f"|format(recommendations.ideal_characteristics.pH) }}</span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" 
+                                         style="width: {{ (recommendations.ideal_characteristics.pH/4)*100 }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="characteristic-item">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6>Sulphates</h6>
+                                    <span class="characteristic-value">{{ "%.2f"|format(recommendations.ideal_characteristics.sulphates) }} g/dm³</span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" 
+                                         style="width: {{ (recommendations.ideal_characteristics.sulphates/2)*100 }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="characteristic-item">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6>Fixed Acidity</h6>
+                                    <span class="characteristic-value">{{ "%.1f"|format(recommendations.ideal_characteristics.fixed_acidity) }} g/dm³</span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" 
+                                         style="width: {{ (recommendations.ideal_characteristics.fixed_acidity/15)*100 }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Additional Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="info-box">
+                        <h6>How to Use These Recommendations</h6>
+                        <p>These recommendations are based on your highest quality wine predictions. Use them as a guide to improve your wine's quality:</p>
+                        <ul>
+                            <li>Compare your current wine characteristics with the ideal values</li>
+                            <li>Make gradual adjustments to match the recommended levels</li>
+                            <li>Keep track of changes and their effects on quality</li>
+                            <li>Remember that these are guidelines, not strict rules</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.quality-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0 auto;
+    color: white;
+    transition: transform 0.3s ease;
+}
+
+.quality-circle:hover {
+    transform: scale(1.1);
+}
+
+.quality-circle.high-quality {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+}
+
+.quality-circle.low-quality {
+    background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+}
+
+.tips-list {
+    list-style: none;
+    padding: 0;
+}
+
+.tip-item {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: var(--light-bg);
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.characteristic-item {
+    padding: 1rem;
+    background-color: var(--light-bg);
+    border-radius: 8px;
+}
+
+.characteristic-value {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.progress {
+    height: 8px;
+    border-radius: 4px;
+    background-color: rgba(0,0,0,0.1);
+}
+
+.progress-bar {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #0056b3 100%);
+    border-radius: 4px;
+}
+
+.info-box {
+    background-color: var(--light-bg);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.info-box ul {
+    padding-left: 1.5rem;
+}
+
+.info-box li {
+    margin-bottom: 0.5rem;
+}
+</style>
+{% endblock %} 

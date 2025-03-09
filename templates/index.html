@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="welcome-section">
+    <h1>Welcome to Wine Quality Prediction</h1>
+    <p>Discover the quality of your wine using our advanced machine learning model. Sign up or login to start making predictions!</p>
+    
+    {% if not current_user.is_authenticated %}
+    <div class="mt-4">
+        <a href="{{ url_for('login') }}" class="btn btn-light me-3">Login</a>
+        <a href="{{ url_for('signup') }}" class="btn btn-outline-light">Sign Up</a>
+    </div>
+    {% else %}
+    <div class="mt-4">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-light">Go to Dashboard</a>
+    </div>
+    {% endif %}
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Easy to Use</h5>
+                <p class="card-text">Simply input your wine's characteristics and get instant quality predictions.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Machine Learning</h5>
+                <p class="card-text">Powered by advanced machine learning algorithms for accurate predictions.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Secure</h5>
+                <p class="card-text">Your data is safe with us. We use the latest security measures to protect your information.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
